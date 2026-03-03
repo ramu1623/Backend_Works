@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JWT Simple Demo</title>
+</head>
+<body>
+  <h2>JWT Login Demo</h2>
+
+  <input type="text" id="username" placeholder="username" />
+  <input type="password" id="password" placeholder="password" />
+  <button onclick="login()">Login</button>
+
+  <br><br>
+
+  <button onclick="getDashboard()">Access Dashboard</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    let token = "";
+
+    function login() {
+      fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: document.getElementById("username").value,
+          password: document.getElementById("password").value
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        token = data.token;
+        document.getElementById("output").innerText =
+          "Token received:\n" + token;
+      });
+    }
+
+    function getDashboard() {
+      fetch("/api/auth/dashboard", {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("output").innerText =
+          JSON.stringify(data, null, 2);
+      });
+    }
+  </script>
+</body>
+</html>
