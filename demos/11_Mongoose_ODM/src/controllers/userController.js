@@ -63,8 +63,10 @@ exports.updateUser = async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       req.body,
-      /*{ new: true } Deprecated*/
-      { returnDocument: "after" }// new version
+      {
+        returnDocument: "after", // returns updated document
+        runValidators: true      // enables schema validation
+      }
     );
 
     res.json(user);
