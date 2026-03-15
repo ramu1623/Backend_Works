@@ -8,6 +8,7 @@ exports.createUser = async (req, res) => {
 
     const user = await User.create(req.body);
 
+    // express automatically converts mongoose document to JSON as like toJSON() method
     res.json(user);
 
   } catch (err) {
@@ -59,10 +60,11 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
 
   try {
-
+    // we can do it with normal updateOne also by this filter { _id: req.params.id }
     const user = await User.findByIdAndUpdate(
-      req.params.id,
+      req.params.id,//{ _id: req.params.id } if updateOne is used
       req.body,
+      /*{ new: true } Deprecated*/
       {
         returnDocument: "after", // returns updated document
         runValidators: true      // enables schema validation
@@ -84,8 +86,9 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
 
   try {
-
+    // we can do it with normal deleteOne also by this filter { _id: req.params.id }
     await User.findByIdAndDelete(req.params.id);
+                                //{ _id: req.params.id } if deleteOne is used
 
     res.json({ message: "User Deleted" });
 
